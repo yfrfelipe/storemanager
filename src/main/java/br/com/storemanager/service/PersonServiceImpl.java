@@ -1,18 +1,16 @@
 package br.com.storemanager.service;
 
 import br.com.storemanager.model.PersonDTO;
+import br.com.storemanager.persistence.PersonPersistence;
 import java.util.UUID;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@SpringBootApplication
-@Component
+@Service
 public class PersonServiceImpl implements PersonService {
 
-    public static void main(String[] args) {
-        SpringApplication.run(PersonServiceImpl.class, args);
-    }
+    @Autowired
+    private PersonPersistence personPersistence;
 
     @Override
     public void create(PersonDTO entityDTO) {
