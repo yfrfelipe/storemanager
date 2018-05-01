@@ -3,28 +3,27 @@ package br.com.storemanager.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity (name = "tb_person")
-public class Person extends AbstractEntity {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class Product extends AbstractEntity {
 
     @Id
-    private Integer id;
+    @Getter
+    @Setter
+    private Long id;
 
     @Column (nullable = false)
+    @Getter
+    @Setter
     private String name;
-
-    public Person(){}
-
-    public Person(final String name) {
-        super();
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

@@ -1,50 +1,65 @@
 package br.com.storemanager.control;
 
-import br.com.storemanager.model.PersonDTO;
-import br.com.storemanager.service.PersonService;
+import br.com.storemanager.dto.ProductDTO;
+import br.com.storemanager.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.annotation.PostConstruct;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/product")
 @Api(value = "storemanager", description = "Operations.")
-public class PersonController implements AbstractWebService<PersonDTO> {
+public class ProductController implements ProductWebService {
+    private static final Logger LOG = LogManager.getLogger(ProductController.class);
 
     @Autowired
-    private PersonService personServiceImpl;
+    private ProductService productServiceImpl;
 
-    @PostMapping(path = "/people")
-    @Override
-    public void doPost(@RequestBody PersonDTO modelDTO) {
-        personServiceImpl.create(modelDTO);
+    @PostConstruct
+    public void init() {
+        LOG.info("Product Controller initialized with success! ProductService instance: {}", productServiceImpl);
     }
 
-    @GetMapping(path = "/people")
-    @ApiOperation(value = "Search for a gicen ID")
+    @PostMapping(path = "/")
     @Override
-    public void doGet(@PathVariable String id) {
+    public void doPost(@RequestBody ProductDTO modelDTO) {
+        productServiceImpl.create(modelDTO);
+    }
+
+    @GetMapping(path = "/{id}")
+    @ApiOperation(value = "Search a product from a given ID.")
+    @Override
+    @ResponseBody
+    public ProductDTO doGet(@PathVariable Long id) {
+        return productServiceImpl.retrieve(id);
+    }
+
+    @PutMapping(path = "/")
+    @Override
+    public void doPut(ProductDTO modelDTO) {
+
+    }
+
+    @DeleteMapping(path = "/")
+    @Override
+    public void doDelete(ProductDTO modelDTO) {
 
     }
 
     @Override
-    public void doPut(PersonDTO modelDTO) {
-
-    }
-
-    @Override
-    public void doDelete(PersonDTO modelDTO) {
-
-    }
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(PersonController.class, args);
+    public void close() throws Exception {
+        LOG.info("Stopping down Product Controller.");
     }
 }

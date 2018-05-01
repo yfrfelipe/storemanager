@@ -1,17 +1,29 @@
 package br.com.storemanager.converter;
 
-import br.com.storemanager.model.Person;
-import br.com.storemanager.model.PersonDTO;
+import br.com.storemanager.dto.ProductDTO;
+import br.com.storemanager.model.Product;
+import com.google.gson.Gson;
 
-public class PersonConverter {
+public class ProductConverter {
 
-    public static Person fromPersonDTOToperson(final PersonDTO personDTO) {
-        final Person person = new Person(personDTO.getName());
-        return person;
+    public static Product fromProductDTOToProduct(final ProductDTO productDTO) {
+        final Product product = new Product(productDTO.getId(), productDTO.getName());
+        return product;
     }
 
-    public static PersonDTO fromPersonToPersonDTO(final Person person) {
-        final PersonDTO personDTO = new PersonDTO(person.getName());
-        return personDTO;
+    public static ProductDTO fromProductToProductDTO(final Product person) {
+        final ProductDTO productDTO = new ProductDTO(person.getId(), person.getName());
+        return productDTO;
+    }
+
+    public static ProductDTO fromJson(final String jsonValue) {
+        final Gson gson = new Gson();
+        return gson.fromJson(jsonValue, ProductDTO.class);
+    }
+
+    public static String toJson(final ProductDTO productDTO) {
+        final Gson gson = new Gson();
+        final String json = gson.toJson(productDTO);
+        return json;
     }
 }
