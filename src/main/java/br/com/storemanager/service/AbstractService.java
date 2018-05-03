@@ -16,9 +16,9 @@ public interface AbstractService<
 
     void create(T entityDTO) throws C;
 
-    T retrieve(Long id) throws R;
+    T retrieve(Integer id) throws R;
 
     void update(T entityDTO) throws U;
 
-    void delete(Long id) throws D;
+    void delete(Integer id) throws D;
 }

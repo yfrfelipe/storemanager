@@ -15,7 +15,7 @@ public interface AbstractWebService<T extends AbstractDTO> {
     /**
      * This method is responsble to retrieve a given data.
      */
-    T doGet(Long id);
+    T doGet(Integer id);
 
     void doPut(T modelDTO);
 

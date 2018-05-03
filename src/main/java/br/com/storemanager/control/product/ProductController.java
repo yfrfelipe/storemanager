@@ -1,4 +1,4 @@
-package br.com.storemanager.control;
+package br.com.storemanager.control.product;
 
 import br.com.storemanager.dto.ProductDTO;
 import br.com.storemanager.service.ProductService;
@@ -42,7 +42,7 @@ public class ProductController implements ProductWebService {
     @ApiOperation(value = "Search a product from a given ID.")
     @Override
     @ResponseBody
-    public ProductDTO doGet(@PathVariable Long id) {
+    public ProductDTO doGet(@PathVariable Integer id) {
         return productServiceImpl.retrieve(id);
     }
 
