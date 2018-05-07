@@ -31,7 +31,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(regex("/products.*"))
+                .paths(regex("/*"))
                 .apis(RequestHandlerSelectors.basePackage("br.com.storemanager.control"))
                 .build()
                 .apiInfo(metaData());

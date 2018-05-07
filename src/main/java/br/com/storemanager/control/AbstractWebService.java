@@ -5,19 +5,19 @@ import br.com.storemanager.dto.AbstractDTO;
 /**
  * This service is used to manage HTTP requests.
  */
-public interface AbstractWebService<T extends AbstractDTO> {
+public interface AbstractWebService<T extends AbstractDTO> extends AutoCloseable  {
 
     /**
      * This method is responsible to receive a DTO to be created.
      */
-    void doPost(T modelDTO);
+    void post(T modelDTO);
 
     /**
      * This method is responsble to retrieve a given data.
      */
-    T doGet(Integer id);
+    T get(Integer id);
 
-    void doPut(T modelDTO);
+    void put(Integer id, T modelDTO);
 
-    void doDelete(T modelDTO);
+    void delete(Integer id);
 }

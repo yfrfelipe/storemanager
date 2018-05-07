@@ -1,4 +1,4 @@
-package br.com.storemanager.exception;
+package br.com.storemanager.exception.southbound;
 
 public abstract class AbstractDeleteException extends RuntimeException {
 

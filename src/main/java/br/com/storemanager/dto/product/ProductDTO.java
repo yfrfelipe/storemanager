@@ -1,5 +1,6 @@
-package br.com.storemanager.dto;
+package br.com.storemanager.dto.product;
 
+import br.com.storemanager.dto.AbstractDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,7 @@
 package br.com.storemanager.control.product;
 
-import br.com.storemanager.dto.ProductDTO;
+import br.com.storemanager.control.validator.ProductValidator;
+import br.com.storemanager.dto.product.ProductDTO;
 import br.com.storemanager.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/product")
-@Api(value = "storemanager", description = "Operations.")
+@Api(value = "storemanager", description = "Product Operations.")
 public class ProductController implements ProductWebService {
     private static final Logger LOG = LogManager.getLogger(ProductController.class);
 
@@ -29,37 +30,47 @@ public class ProductController implements ProductWebService {
 
     @PostConstruct
     public void init() {
-        LOG.info("Product Controller initialized with success! ProductService instance: {}", productServiceImpl);
+        LOG.info("Product Controller initialized with success!");
     }
 
     @PostMapping(path = "/")
+    @ApiOperation(value = "Create a given product.")
     @Override
-    public void doPost(@RequestBody ProductDTO modelDTO) {
-        productServiceImpl.create(modelDTO);
+    public void post(@RequestBody final ProductDTO product) {
+        ProductValidator.validateProductDto(product);
+
+        productServiceImpl.create(product);
     }
 
     @GetMapping(path = "/{id}")
-    @ApiOperation(value = "Search a product from a given ID.")
+    @ApiOperation(value = "Retrieve a product from a given ID.")
     @Override
     @ResponseBody
-    public ProductDTO doGet(@PathVariable Integer id) {
+    public ProductDTO get(@PathVariable final Integer id) {
         return productServiceImpl.retrieve(id);
     }
 
-    @PutMapping(path = "/")
+    @PutMapping(path = "/{id}")
+    @ApiOperation(value = "Update a given product based on an existing ID.")
     @Override
-    public void doPut(ProductDTO modelDTO) {
+    public void put(@PathVariable final Integer id, @RequestBody final ProductDTO product) {
+        ProductValidator.validateId(id);
+        ProductValidator.validateProductDto(product);
 
+        productServiceImpl.update(id, product);
     }
 
-    @DeleteMapping(path = "/")
+    @DeleteMapping(path = "/{id}")
+    @ApiOperation("Delete a given product based on a given ID.")
     @Override
-    public void doDelete(ProductDTO modelDTO) {
+    public void delete(@PathVariable final Integer id) {
+        ProductValidator.validateId(id);
 
+        productServiceImpl.delete(id);
     }
 
     @Override
     public void close() throws Exception {
-        LOG.info("Stopping down Product Controller.");
+        LOG.info("Stopping Product Controller.");
     }
 }

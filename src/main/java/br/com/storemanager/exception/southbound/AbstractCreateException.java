@@ -1,4 +1,4 @@
-package br.com.storemanager.exception;
+package br.com.storemanager.exception.southbound;
 
 public abstract class AbstractCreateException extends RuntimeException {
 

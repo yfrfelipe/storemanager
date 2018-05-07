@@ -79,6 +79,12 @@
             <version>${modelmapper.version}</version>
         </dependency>
 
+        <!--Security-->
+        <!--<dependency>-->
+            <!--<groupId>${sprint.boot}</groupId>-->
+            <!--<artifactId>spring-boot-starter-security</artifactId>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

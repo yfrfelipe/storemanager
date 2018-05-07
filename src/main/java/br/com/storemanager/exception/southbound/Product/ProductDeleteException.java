@@ -1,4 +1,6 @@
-package br.com.storemanager.exception;
+package br.com.storemanager.exception.southbound.Product;
+
+import br.com.storemanager.exception.southbound.AbstractDeleteException;
 
 public class ProductDeleteException extends AbstractDeleteException {
 
