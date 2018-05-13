@@ -30,7 +30,6 @@ public class ProductDTO extends AbstractDTO {
     private String ncm;
 
     // Código Fiscal de Operações e Prestações
-    @Column
     @Getter
     @Setter
     private String cofp;
@@ -43,5 +42,9 @@ public class ProductDTO extends AbstractDTO {
     @Getter
     @NonNull
     private BarcodeDTO barcodeDTO;
+
+    @Getter
+    @NonNull
+    private ProductDetailsDTO productDetailsDTO;
 
 }

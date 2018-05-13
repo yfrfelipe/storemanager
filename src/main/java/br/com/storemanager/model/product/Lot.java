@@ -43,4 +43,9 @@ public class Lot extends AbstractEntity {
     @Getter
     @NonNull
     private Set<Product> products;
+
+    @OneToOne
+    @Getter
+    @NonNull
+    private Provider provider;
 }

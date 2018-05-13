@@ -66,4 +66,9 @@ public class Product extends AbstractEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Barcode barcode;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Getter
+    @NonNull
+    private ProductDetails productDetails;
+
 }
