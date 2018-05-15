@@ -25,15 +25,16 @@ public class ProductConvert implements ConvertService<Product, ProductDTO> {
     }
 
     @Override
-    public Product fromDto(ProductDTO dto) {
+    public Product fromDto(final ProductDTO dto) {
         final Product product = modelMapper.map(dto, Product.class);
         final Barcode barcode = barcodeConverter.fromDto(dto.getBarcodeDTO());
+
         product.setBarcode(barcode);
         return product;
     }
 
     @Override
-    public ProductDTO toDto(Product entity) {
+    public ProductDTO toDto(final Product entity) {
         final ProductDTO productDTO = modelMapper.map(entity, ProductDTO.class);
         final BarcodeDTO barcodeDTO = barcodeConverter.toDto(entity.getBarcode());
 

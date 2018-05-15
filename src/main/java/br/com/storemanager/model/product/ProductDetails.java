@@ -1,23 +1,20 @@
 package br.com.storemanager.model.product;
 
 import br.com.storemanager.model.AbstractEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
-import javax.persistence.Basic;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity(name = "tb_product_details")
 @Data
@@ -34,10 +31,11 @@ public class ProductDetails extends AbstractEntity {
     @NonNull
     private Integer id;
 
-    @Basic(optional = false)
-    @Column(insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date registerTime;
+    @Column
+    @Getter
+    @NonNull
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
 
     @Column(nullable = false)
     @Getter

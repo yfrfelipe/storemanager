@@ -1,9 +1,8 @@
 package br.com.storemanager.dto.product;
 
 import br.com.storemanager.dto.AbstractDTO;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -30,5 +29,5 @@ public class LotDTO extends AbstractDTO {
     @Getter
     @Setter
     @NonNull
-    private ProviderDTO providerDTO;
+    private Integer providerId;
 }

@@ -5,6 +5,7 @@ import br.com.storemanager.dto.product.ProductDTO;
 import br.com.storemanager.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,13 @@ public class ProductController implements ProductWebService {
         ProductValidator.validateId(id);
 
         productServiceImpl.delete(id);
+    }
+
+    @PutMapping(path = "/down")
+    @ApiOperation(value = "Evaluate a stock down for a list of products.")
+    @Override
+    public void stockDown(@RequestBody final Map<Integer, Integer> productIdByQuantity) {
+        productServiceImpl.productDown(productIdByQuantity);
     }
 
     @Override

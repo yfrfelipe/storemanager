@@ -44,8 +44,8 @@ public class Lot extends AbstractEntity {
     @NonNull
     private Set<Product> products;
 
-    @OneToOne
+    @Column
     @Getter
     @NonNull
-    private Provider provider;
+    private Integer providerId;
 }

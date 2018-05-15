@@ -20,12 +20,12 @@ public class BarcodeConverter implements ConvertService<Barcode, BarcodeDTO> {
     }
 
     @Override
-    public Barcode fromDto(BarcodeDTO dto) {
+    public Barcode fromDto(final BarcodeDTO dto) {
         return modelMapper.map(dto, Barcode.class);
     }
 
     @Override
-    public BarcodeDTO toDto(Barcode entity) {
+    public BarcodeDTO toDto(final Barcode entity) {
         return modelMapper.map(entity, BarcodeDTO.class);
     }
 }

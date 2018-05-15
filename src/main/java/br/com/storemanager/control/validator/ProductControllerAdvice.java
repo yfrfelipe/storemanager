@@ -2,6 +2,7 @@ package br.com.storemanager.control.validator;
 
 import br.com.storemanager.exception.northbound.IDInvalidException;
 import br.com.storemanager.exception.northbound.product.ProductInvalidException;
+import br.com.storemanager.exception.southbound.Product.InsuficientQuantityException;
 import br.com.storemanager.exception.southbound.Product.ProductNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,14 @@ public class ProductControllerAdvice {
     @ExceptionHandler(IDInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String invalidIDExceptionHandler(final IDInvalidException e) {
+        LOG.error(e);
+        return e.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InsuficientQuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String insuficienQuantityExceptionHandler(final InsuficientQuantityException e) {
         LOG.error(e);
         return e.getMessage();
     }
