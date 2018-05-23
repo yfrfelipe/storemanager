@@ -29,7 +29,7 @@ public class Barcode extends AbstractEntity {
     @NonNull
     private Integer id;
 
-    @Column
+    @Column(nullable = false, updatable = false)
     @Getter
     private String code;
 }

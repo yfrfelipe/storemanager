@@ -6,6 +6,7 @@ import br.com.storemanager.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,6 +60,12 @@ public class ProductController implements ProductWebService {
         ProductValidator.validateProductDto(product);
 
         productServiceImpl.update(id, product);
+    }
+
+    @PutMapping(path = "/reserve")
+    @ApiOperation(value = "Start a reservation based in a transaction ID.")
+    public void startResservation(@PathVariable final UUID transactionID) {
+
     }
 
     @DeleteMapping(path = "/{id}")

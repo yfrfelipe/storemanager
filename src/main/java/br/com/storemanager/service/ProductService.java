@@ -7,7 +7,6 @@ import br.com.storemanager.exception.southbound.Product.ProductDeleteException;
 import br.com.storemanager.exception.southbound.Product.ProductNotFoundException;
 import br.com.storemanager.exception.southbound.Product.ProductUpdateException;
 import java.util.Map;
-import java.util.Set;
 
 public interface ProductService extends AbstractService<
         ProductDTO,
@@ -17,4 +16,6 @@ public interface ProductService extends AbstractService<
         ProductDeleteException> {
 
     void productDown(Map<Integer, Integer> productIdByQuantity) throws InsuficientQuantityException;
+
+    void putBackToStock(Map<Integer, Integer> productIdByQuantity) throws ProductUpdateException;
 }

@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void productDown(final Map<Integer, Integer> productIdByQuantity) throws InsuficientQuantityException {
+    public synchronized void productDown(final Map<Integer, Integer> productIdByQuantity) throws InsuficientQuantityException {
         final Iterable<Product> iterable = productRepository.findAllById(productIdByQuantity.keySet());
         final Set<Integer> productIdsWithInsuficientQuantity = Sets.newHashSet();
         final Set<Product> productsWithNewQuantity = Sets.newHashSetWithExpectedSize(productIdByQuantity.keySet().size());
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
         while (iterator.hasNext()) {
             final Product product = iterator.next();
             final Integer currentQuantity = product.getProductDetails().getQuantity();
-            final Integer newQuantity = Math.subtractExact(currentQuantity, productIdByQuantity.get(product.getId()));
+            final Integer newQuantity = (currentQuantity - productIdByQuantity.get(product.getId()));
             if (newQuantity < 0) {
                 productIdsWithInsuficientQuantity.add(product.getId());
             } else {
@@ -91,11 +91,28 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (!productIdsWithInsuficientQuantity.isEmpty()) {
+            LOG.error("Quantity of erros: {}", productIdsWithInsuficientQuantity.size());
             throw new InsuficientQuantityException(productIdsWithInsuficientQuantity);
         }
 
         productRepository.saveAll(productsWithNewQuantity);
 
+    }
+
+    @Override
+    public synchronized void putBackToStock(final Map<Integer, Integer> productIdByQuantity) throws ProductUpdateException {
+        final Iterable<Product> products = productRepository.findAllById(productIdByQuantity.keySet());
+
+        final Iterator<Product> iterator = products.iterator();
+        while (iterator.hasNext()) {
+            final Product product = iterator.next();
+            final Integer quantityToIncrement = productIdByQuantity.get(product.getId());
+            final Integer currentQuantity = product.getProductDetails().getQuantity();
+
+            product.getProductDetails().setQuantity((quantityToIncrement + currentQuantity));
+        }
+
+        productRepository.saveAll(products);
     }
 
     private void isExistingProduct(final Integer id) throws ProductNotFoundException {
