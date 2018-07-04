@@ -1,15 +1,14 @@
 package br.com.storemanager.model.reservation;
 
 import br.com.storemanager.model.AbstractEntity;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CollectionTable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,15 +28,16 @@ public class Reservation extends AbstractEntity {
     @Column(nullable = false, updatable = false)
     @NonNull
     private UUID reservationID;
-    @ElementCollection
-    @MapKeyColumn
-    @Column
-    @CollectionTable(name = "product_by_quantity", joinColumns = @JoinColumn(name = "product_id"))
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Getter
     @NonNull
-    private Map<Integer, Integer> productByQuantity;
+    private Set<ProductByQuantity> productByQuantity;
     @Column(nullable = false)
     @Getter
     @NonNull
     private Long timestamp;
+    @Column
+    @Getter
+    @NonNull
+    private Long reserveTime;
 }

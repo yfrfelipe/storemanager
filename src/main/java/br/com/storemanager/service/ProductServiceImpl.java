@@ -18,9 +18,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOG = LogManager.getLogger(ProductServiceImpl.class);
 
@@ -30,10 +33,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ConvertService<Product, ProductDTO> productConvertor;
 
-
     @PostConstruct
     public void init() {
-
         LOG.info("Product Service initialized with success.");
     }
 
@@ -101,6 +102,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public synchronized void putBackToStock(final Map<Integer, Integer> productIdByQuantity) throws ProductUpdateException {
+        LOG.info("Putting product back to stock: {}", productIdByQuantity.toString());
         final Iterable<Product> products = productRepository.findAllById(productIdByQuantity.keySet());
 
         final Iterator<Product> iterator = products.iterator();
@@ -112,7 +114,8 @@ public class ProductServiceImpl implements ProductService {
             product.getProductDetails().setQuantity((quantityToIncrement + currentQuantity));
         }
 
-        productRepository.saveAll(products);
+        final Iterable<Product> iterable = productRepository.saveAll(products);
+        LOG.info("Updating products: {}", products);
     }
 
     private void isExistingProduct(final Integer id) throws ProductNotFoundException {

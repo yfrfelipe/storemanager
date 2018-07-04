@@ -3,16 +3,26 @@ package br.com.storemanager.service;
 import br.com.storemanager.exception.southbound.reservation.ReservationCreateException;
 import br.com.storemanager.exception.southbound.reservation.ReservationDeleteException;
 import br.com.storemanager.exception.southbound.reservation.ReservationUpdateException;
+import br.com.storemanager.model.reservation.ProductByQuantity;
 import br.com.storemanager.model.reservation.Reservation;
 import br.com.storemanager.persistence.ReservationRepository;
 import com.google.common.collect.Maps;
-import java.util.Optional;
+import com.google.common.collect.Sets;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ReservationServiceImpl implements ReservationService {
+    private static final Logger LOG = LogManager.getLogger(ReservationServiceImpl.class);
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -21,32 +31,65 @@ public class ReservationServiceImpl implements ReservationService {
     private ProductService productService;
 
     @Override
-    public void createReservation(final UUID transactionID) throws ReservationCreateException {
+    public synchronized void createReservation(final UUID transactionID,
+                                               final Map<Integer, Integer> productByQuantity,
+                                               final Long reservationTime) throws ReservationCreateException {
+        final Long currentTime = System.currentTimeMillis();
         final Reservation reservation = new Reservation();
-        reservation.setReservationID(transactionID);
-        reservation.setProductByQuantity(Maps.newHashMap());
-        reservation.setTimestamp(System.currentTimeMillis());
+        final Set<ProductByQuantity> productByQuantities = Sets.newHashSet();
 
+        for (Integer productId : productByQuantity.keySet()) {
+            final ProductByQuantity productByQuantityEntity = new ProductByQuantity();
+
+            productByQuantityEntity.setProductId(productId);
+            productByQuantityEntity.setQuantity(productByQuantity.get(productId));
+            productByQuantities.add(productByQuantityEntity);
+        }
+        reservation.setReservationID(transactionID);
+        reservation.setProductByQuantity(productByQuantities);
+        reservation.setTimestamp(currentTime);
+        reservation.setReserveTime(currentTime + reservationTime);
+
+        productService.productDown(productByQuantity);
         reservationRepository.save(reservation);
     }
 
+    @Transactional
     @Override
-    public void cancelReservation(final UUID transactionID) throws ReservationUpdateException {
-        final Optional<Reservation> optional = reservationRepository.findById(transactionID);
-        if (!optional.isPresent()) {
+    public synchronized void cancelReservation(final UUID transactionID) throws ReservationUpdateException {
+        if (!reservationRepository.existsById(transactionID)) {
+            LOG.info("Transaction with ID {} does not exist.");
             throw new ReservationUpdateException(
                     String.format("Could cancel the reservation with ID %s. Reservation not found.",
                             transactionID.toString()));
         }
 
-        final Reservation reservation = optional.get();
-        productService.putBackToStock(reservation.getProductByQuantity());
+        LOG.info(this);
+        LOG.info(productService);
+        final Reservation reservation = reservationRepository.findById(transactionID).get();
+        productService.putBackToStock(toMap(reservation.getProductByQuantity()));
+        LOG.info("Removing reservation with ID: {}", reservation.getReservationID());
+        reservationRepository.delete(reservation);
     }
 
     @Override
-    public void finalizeReservation(final UUID transactionID) throws ReservationDeleteException {
+    public synchronized void finalizeReservation(final UUID transactionID) throws ReservationDeleteException {
         reservationRepository.deleteById(transactionID);
     }
 
-    //TODO: Implement the reservation timeout handler.
+    @Override
+    public synchronized Set<Reservation> retrieveExpiredReservation() {
+        final Set<Reservation> expired = Sets.newHashSet();
+        expired.addAll(reservationRepository.retreiveExpiredReservations(System.currentTimeMillis()));
+        return expired;
+    }
+
+    private Map<Integer, Integer> toMap(final Set<ProductByQuantity> productByQuantitySet) {
+        Map<Integer, Integer> result = Maps.newHashMap();
+
+        for (ProductByQuantity productByQuantity : productByQuantitySet) {
+            result.put(productByQuantity.getProductId(), productByQuantity.getQuantity());
+        }
+        return result;
+    }
 }
