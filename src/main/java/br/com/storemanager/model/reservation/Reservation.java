@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Entity(name = "tb_reservation")
 @Data
@@ -40,4 +41,9 @@ public class Reservation extends AbstractEntity {
     @Getter
     @NonNull
     private Long reserveTime;
+    @Column
+    @Getter
+    @Setter
+    @NonNull
+    private Boolean isActive;
 }

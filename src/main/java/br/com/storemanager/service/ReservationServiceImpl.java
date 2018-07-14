@@ -49,6 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setProductByQuantity(productByQuantities);
         reservation.setTimestamp(currentTime);
         reservation.setReserveTime(currentTime + reservationTime);
+        reservation.setIsActive(true);
 
         productService.productDown(productByQuantity);
         reservationRepository.save(reservation);
@@ -69,7 +70,8 @@ public class ReservationServiceImpl implements ReservationService {
         final Reservation reservation = reservationRepository.findById(transactionID).get();
         productService.putBackToStock(toMap(reservation.getProductByQuantity()));
         LOG.info("Removing reservation with ID: {}", reservation.getReservationID());
-        reservationRepository.delete(reservation);
+        reservation.setIsActive(false);
+        reservationRepository.save(reservation);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public synchronized Set<Reservation> retrieveExpiredReservation() {
         final Set<Reservation> expired = Sets.newHashSet();
-        expired.addAll(reservationRepository.retreiveExpiredReservations(System.currentTimeMillis()));
+        expired.addAll(reservationRepository.retrieveExpiredReservations(System.currentTimeMillis()));
         return expired;
     }
 

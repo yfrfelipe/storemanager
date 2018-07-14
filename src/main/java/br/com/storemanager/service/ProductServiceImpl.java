@@ -1,6 +1,7 @@
 package br.com.storemanager.service;
 
 import br.com.storemanager.dto.product.ProductDTO;
+import br.com.storemanager.dto.product.ProductPageDTO;
 import br.com.storemanager.exception.southbound.Product.InsuficientQuantityException;
 import br.com.storemanager.exception.southbound.Product.ProductCreateException;
 import br.com.storemanager.exception.southbound.Product.ProductDeleteException;
@@ -9,7 +10,9 @@ import br.com.storemanager.exception.southbound.Product.ProductUpdateException;
 import br.com.storemanager.model.product.Product;
 import br.com.storemanager.persistence.ProductRepository;
 import br.com.storemanager.service.convertor.ConvertService;
+import com.google.common.collect.Lists;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +23,10 @@ import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -114,8 +121,28 @@ public class ProductServiceImpl implements ProductService {
             product.getProductDetails().setQuantity((quantityToIncrement + currentQuantity));
         }
 
-        final Iterable<Product> iterable = productRepository.saveAll(products);
+        productRepository.saveAll(products);
         LOG.info("Updating products: {}", products);
+    }
+
+    @Override
+    public ProductPageDTO listProducts(final Integer quantity) {
+        final Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "name"));
+        final Pageable pageable = PageRequest.of(0, quantity, sort);
+        final Page<Product> page = productRepository.findAll(pageable);
+
+        final ProductPageDTO productPageDTO = new ProductPageDTO();
+
+        final List<ProductDTO> products = Lists.newArrayList();
+
+        for (Product product : page.getContent()) {
+            products.add(productConvertor.toDto(product));
+        }
+
+        productPageDTO.setContent(products);
+        productPageDTO.setTotalElements(page.getTotalElements());
+        productPageDTO.setTotalPages(page.getTotalPages());
+        return productPageDTO;
     }
 
     private void isExistingProduct(final Integer id) throws ProductNotFoundException {
