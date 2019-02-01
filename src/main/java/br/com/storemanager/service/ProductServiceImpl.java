@@ -7,10 +7,13 @@ import br.com.storemanager.exception.southbound.Product.ProductCreateException;
 import br.com.storemanager.exception.southbound.Product.ProductDeleteException;
 import br.com.storemanager.exception.southbound.Product.ProductNotFoundException;
 import br.com.storemanager.exception.southbound.Product.ProductUpdateException;
+import br.com.storemanager.model.product.Barcode;
 import br.com.storemanager.model.product.Product;
+import br.com.storemanager.model.product.ProductDetails;
 import br.com.storemanager.persistence.ProductRepository;
 import br.com.storemanager.service.convertor.ConvertService;
 import com.google.common.collect.Lists;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public synchronized void putBackToStock(final Map<Integer, Integer> productIdByQuantity) throws ProductUpdateException {
-        LOG.info("Putting product back to stock: {}", productIdByQuantity.toString());
+        LOG.debug("Putting product back to stock: {}", productIdByQuantity.toString());
         final Iterable<Product> products = productRepository.findAllById(productIdByQuantity.keySet());
 
         final Iterator<Product> iterator = products.iterator();
@@ -122,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.saveAll(products);
-        LOG.info("Updating products: {}", products);
+        LOG.debug("Updating products: {}", products);
     }
 
     @Override
