@@ -2,6 +2,7 @@ package br.com.storemanager.control.product;
 
 import br.com.storemanager.control.validator.ProductValidator;
 import br.com.storemanager.dto.product.ProductDTO;
+import br.com.storemanager.dto.product.ProductPageDTO;
 import br.com.storemanager.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -75,6 +77,12 @@ public class ProductController implements ProductWebService {
     @Override
     public void stockDown(@RequestBody final Map<Integer, Integer> productIdByQuantity) {
         productServiceImpl.productDown(productIdByQuantity);
+    }
+
+    @GetMapping(path = "/list")
+    @ApiOperation(value = "List a given quantity of products.")
+    public ProductPageDTO listProducts(@RequestParam final Integer quantity) {
+        return productServiceImpl.listProducts(quantity);
     }
 
     @Override

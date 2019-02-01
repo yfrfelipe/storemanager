@@ -1,6 +1,7 @@
 package br.com.storemanager.control.product;
 
 import br.com.storemanager.control.validator.LotValidator;
+import br.com.storemanager.dto.AbstractPageDTO;
 import br.com.storemanager.dto.product.LotDTO;
 import br.com.storemanager.service.LotService;
 import io.swagger.annotations.Api;
@@ -67,6 +68,11 @@ public class LotController implements LotWebService {
         LotValidator.validateId(id);
 
         lotServiceImpl.delete(id);
+    }
+
+    @Override
+    public AbstractPageDTO<LotDTO> listProducts(Integer quantity) {
+        return null;
     }
 
     @Override

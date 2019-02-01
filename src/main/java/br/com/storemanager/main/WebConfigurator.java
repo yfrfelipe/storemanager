@@ -1,3 +1,9 @@
+/* Copyright (C) Yrineu Rodrigues - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Yrineu Rodrigues <yfrfelipe@gmail.com>, September 2018
+ */
+
 package br.com.storemanager.main;
 
 import org.springframework.context.annotation.Configuration;

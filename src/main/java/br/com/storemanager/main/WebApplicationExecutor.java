@@ -1,12 +1,12 @@
+/* Copyright (C) Yrineu Rodrigues - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Yrineu Rodrigues <yfrfelipe@gmail.com>, September 2018
+ */
+
 package br.com.storemanager.main;
 
 import br.com.storemanager.control.product.ProductController;
-import br.com.storemanager.dto.product.BarcodeDTO;
-import br.com.storemanager.dto.product.LotDTO;
-import br.com.storemanager.dto.product.ProductDTO;
-import br.com.storemanager.model.product.Barcode;
-import br.com.storemanager.model.product.Lot;
-import br.com.storemanager.model.product.Product;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;

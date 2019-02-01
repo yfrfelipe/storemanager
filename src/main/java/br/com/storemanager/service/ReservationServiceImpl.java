@@ -49,6 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setProductByQuantity(productByQuantities);
         reservation.setTimestamp(currentTime);
         reservation.setReserveTime(currentTime + reservationTime);
+        reservation.setIsActive(true);
 
         productService.productDown(productByQuantity);
         reservationRepository.save(reservation);
@@ -58,18 +59,17 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public synchronized void cancelReservation(final UUID transactionID) throws ReservationUpdateException {
         if (!reservationRepository.existsById(transactionID)) {
-            LOG.info("Transaction with ID {} does not exist.");
+            LOG.warn("Transaction with ID {} does not exist.");
             throw new ReservationUpdateException(
                     String.format("Could cancel the reservation with ID %s. Reservation not found.",
                             transactionID.toString()));
         }
 
-        LOG.info(this);
-        LOG.info(productService);
         final Reservation reservation = reservationRepository.findById(transactionID).get();
         productService.putBackToStock(toMap(reservation.getProductByQuantity()));
-        LOG.info("Removing reservation with ID: {}", reservation.getReservationID());
-        reservationRepository.delete(reservation);
+        LOG.debug("Removing reservation with ID: {}", reservation.getReservationID());
+        reservation.setIsActive(false);
+        reservationRepository.save(reservation);
     }
 
     @Override
@@ -80,7 +80,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public synchronized Set<Reservation> retrieveExpiredReservation() {
         final Set<Reservation> expired = Sets.newHashSet();
-        expired.addAll(reservationRepository.retreiveExpiredReservations(System.currentTimeMillis()));
+        expired.addAll(reservationRepository.retrieveExpiredReservations(System.currentTimeMillis()));
+        LOG.debug("Expired reservations: {}", expired);
         return expired;
     }
 
