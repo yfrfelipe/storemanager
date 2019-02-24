@@ -23,7 +23,7 @@ public interface AbstractWebService<T extends AbstractDTO> extends AutoCloseable
 
     void delete(Integer id);
 
-    AbstractPageDTO<T> listProducts(Integer quantity);
+    AbstractPageDTO<T> listByQuantity(Integer quantity);
 
 
 }

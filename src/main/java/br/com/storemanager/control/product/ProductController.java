@@ -73,15 +73,15 @@ public class ProductController implements ProductWebService {
     }
 
     @PutMapping(path = "/down")
-    @ApiOperation(value = "Evaluate a stock down for a list of products.")
+    @ApiOperation(value = "Evaluate a stock down for a listByQuantity of products.")
     @Override
     public void stockDown(@RequestBody final Map<Integer, Integer> productIdByQuantity) {
         productServiceImpl.productDown(productIdByQuantity);
     }
 
-    @GetMapping(path = "/list")
+    @GetMapping(path = "/listByQuantity")
     @ApiOperation(value = "List a given quantity of products.")
-    public ProductPageDTO listProducts(@RequestParam final Integer quantity) {
+    public ProductPageDTO listByQuantity(@RequestParam final Integer quantity) {
         return productServiceImpl.listProducts(quantity);
     }
 

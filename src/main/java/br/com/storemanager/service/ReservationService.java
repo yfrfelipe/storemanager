@@ -16,7 +16,7 @@ public interface ReservationService {
 
     void cancelReservation(UUID transactionID) throws ReservationUpdateException;
 
-    void finalizeReservation(UUID transactionID) throws ReservationDeleteException;
+    UUID finalizeReservation(UUID transactionID) throws ReservationDeleteException;
 
     Set<Reservation> retrieveExpiredReservation();
 }

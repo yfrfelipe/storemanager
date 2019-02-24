@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,7 +48,8 @@ public class ReservationControl {
 
     @PutMapping(path = "/finalize")
     @ApiOperation(value = "Finalize a reservation based on a given transaction ID.")
-    public void finalizeReservation(final UUID transactionID) {
-        reservationService.finalizeReservation(transactionID);
+    @ResponseBody
+    public UUID finalizeReservation(@RequestBody final UUID transactionID) {
+        return reservationService.finalizeReservation(transactionID);
     }
 }

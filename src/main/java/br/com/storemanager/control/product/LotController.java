@@ -33,7 +33,7 @@ public class LotController implements LotWebService {
     }
 
     @PostMapping(path = "/")
-    @ApiOperation(value = "Create a given lot containing a list of products.")
+    @ApiOperation(value = "Create a given lot containing a listByQuantity of products.")
     @Override
     public void post(@RequestBody final LotDTO lot) {
         LotValidator.validateLot(lot);
@@ -70,9 +70,12 @@ public class LotController implements LotWebService {
         lotServiceImpl.delete(id);
     }
 
+    @GetMapping(path = "list/{quantity}")
+    @ApiOperation(value = "List lots by quantity")
+    @ResponseBody
     @Override
-    public AbstractPageDTO<LotDTO> listProducts(Integer quantity) {
-        return null;
+    public AbstractPageDTO<LotDTO> listByQuantity(@PathVariable final Integer quantity) {
+        return lotServiceImpl.listLots(quantity);
     }
 
     @Override

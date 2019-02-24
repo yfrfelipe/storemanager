@@ -73,8 +73,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public synchronized void finalizeReservation(final UUID transactionID) throws ReservationDeleteException {
-        reservationRepository.deleteById(transactionID);
+    public synchronized UUID finalizeReservation(final UUID transactionID) throws ReservationDeleteException {
+        if (reservationRepository.existsById(transactionID)) {
+            LOG.info("Finalizing reservation with ID: {}", transactionID);
+            reservationRepository.deleteById(transactionID);
+        } else {
+            throw new ReservationDeleteException(transactionID.toString());
+        }
+        return transactionID;
     }
 
     @Override

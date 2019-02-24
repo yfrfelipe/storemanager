@@ -1,6 +1,7 @@
 package br.com.storemanager.service;
 
 import br.com.storemanager.dto.product.LotDTO;
+import br.com.storemanager.dto.product.LotPageDTO;
 import br.com.storemanager.exception.southbound.lot.LotCreateException;
 import br.com.storemanager.exception.southbound.lot.LotDeleteException;
 import br.com.storemanager.exception.southbound.lot.LotNotFoundException;
@@ -12,4 +13,6 @@ public interface LotService extends AbstractService<
         LotUpdateException,
         LotNotFoundException,
         LotDeleteException> {
+
+    LotPageDTO listLots(Integer quantity);
 }

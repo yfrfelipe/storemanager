@@ -18,6 +18,10 @@ public class ProductDTO extends AbstractDTO {
 
     @Getter
     @NonNull
+    private Integer productID;
+
+    @Getter
+    @NonNull
     private String name;
 
     @Getter
